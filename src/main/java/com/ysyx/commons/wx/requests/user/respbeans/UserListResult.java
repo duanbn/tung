@@ -26,6 +26,15 @@ public class UserListResult {
 
 	/**
 	 * 
+	 */
+	@Override
+	public String toString() {
+		return "UserListResult [total=" + total + ", count=" + count + ", data=" + data + ", nextOpenId=" + nextOpenId
+				+ "]";
+	}
+
+	/**
+	 * 
 	 * @return
 	 */
 	public int getTotal() {
@@ -97,6 +106,14 @@ public class UserListResult {
 
 		@JsonProperty("openid")
 		private List<String> openId;
+
+		/**
+		 * 
+		 */
+		@Override
+		public String toString() {
+			return "Data [openId=" + openId + "]";
+		}
 
 		/**
 		 * 

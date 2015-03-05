@@ -6,7 +6,7 @@ package com.ysyx.commons.wx.exception;
  * @author duanbn
  */
 public class RequestException extends Exception {
-
+	
 	/**
 	 * 
 	 * @param msg

@@ -42,6 +42,20 @@ public class UserInfoResult {
 
 	@JsonProperty("unionid")
 	private String unionId;
+	
+	@JsonProperty("remark")
+	private String remark;
+
+	/**
+	 * 
+	 */
+	@Override
+	public String toString() {
+		return "UserInfoResult [subscribe=" + subscribe + ", openId=" + openId + ", nickName=" + nickName + ", sex="
+				+ sex + ", language=" + language + ", city=" + city + ", province=" + province + ", country=" + country
+				+ ", headimgUrl=" + headimgUrl + ", subscribeTime=" + subscribeTime + ", unionId=" + unionId
+				+ ", remark=" + remark + "]";
+	}
 
 	/**
 	 * 

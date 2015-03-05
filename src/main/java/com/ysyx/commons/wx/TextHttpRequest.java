@@ -32,6 +32,7 @@ public class TextHttpRequest<T> extends AbstractHttpRequest<T> {
 		CloseableHttpClient httpClient = null;
 		try {
 			httpClient = HttpClients.createDefault();
+			
             final StringEntity stringEntity = new StringEntity(getPostData(), Charset.forName("UTF-8"));
             if (LOG.isDebugEnabled()) {
 				LOG.debug("post data " + EntityUtils.toString(stringEntity));

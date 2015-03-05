@@ -42,7 +42,9 @@ public class Button {
 	 */
 	public Button(final String name, final EnumButtonType type) {
 		this.name = name;
-		this.type = type.getValue();
+		if (type != null) {
+			this.type = type.getValue();
+		}
 	}
 
 	/**
@@ -84,18 +86,18 @@ public class Button {
 
 	/**
 	 * 
-	 * @return
-	 */
-	public String getType() {
-		return type;
-	}
-
-	/**
-	 * 
 	 * @param type
 	 */
 	public void setType(final String type) {
 		this.type = type;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getType() {
+		return type;
 	}
 
 	/**

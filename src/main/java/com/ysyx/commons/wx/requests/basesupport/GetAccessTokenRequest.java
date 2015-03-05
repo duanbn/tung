@@ -14,6 +14,10 @@ import com.ysyx.commons.wx.requests.basesupport.respbeans.AccessToken;
 @Get("/cgi-bin/token")
 public class GetAccessTokenRequest extends TextHttpRequest<AccessToken> {
 
+	private static final String APP_ID = "wxedabf9b277b61d91";
+
+	private static final String APP_SECRET = "d9134bee753052e8df681c4514768e02";
+
 	@QueryString("grant_type")
 	private String grantType = "client_credential";
 
@@ -27,7 +31,7 @@ public class GetAccessTokenRequest extends TextHttpRequest<AccessToken> {
      * 
      */
 	public GetAccessTokenRequest() {
-		this("wx8c7fd9739d4600e2", "ec8d243dd68323ce0fe0e86fbf84745e");
+		this(APP_ID, APP_SECRET);
 	}
 
 	/**

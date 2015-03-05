@@ -614,7 +614,7 @@ public class WXSession {
 						if (resp.isOK()) {
 							final AccessToken accessToken = resp.get();
 							wxAccessToken = new WXAccessToken(accessToken.getAccessToken(), System.currentTimeMillis());
-							this.memClient.set(TOKEN_KEY, (int) TOKEN_EXPIRE, wxAccessToken);
+							this.memClient.set(TOKEN_KEY, 0, wxAccessToken);
 							break;
 						} else {
 							sleep(1000);
@@ -623,7 +623,7 @@ public class WXSession {
 				}
 			}
 		}
-
+		
 		return wxAccessToken;
 	}
 
@@ -638,7 +638,7 @@ public class WXSession {
 	/**
      * 
      */
-	private class WXAccessToken implements Serializable {
+	private static class WXAccessToken implements Serializable {
 		private static final long serialVersionUID = 1L;
 
 		private final String value;

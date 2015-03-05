@@ -1,12 +1,15 @@
 package com.ysyx.commons.wx;
 
-import com.ysyx.commons.wx.exception.ResponseParseException;
-import com.ysyx.commons.wx.util.JsonUtil;
+import java.io.IOException;
+
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
+import com.ysyx.commons.wx.exception.ResponseParseException;
+import com.ysyx.commons.wx.util.JsonUtil;
 
 /**
  * apache http client response handler implement.
@@ -16,6 +19,8 @@ import java.io.IOException;
  * @param <T>
  */
 public class HttpResponseHandler<T> implements ResponseHandler<HttpResponse<T>> {
+
+	public static final Logger LOG = LoggerFactory.getLogger(HttpResponseHandler.class);
 
 	/**
 	 * if response message contain this string, this maybe a weixin error
@@ -49,7 +54,11 @@ public class HttpResponseHandler<T> implements ResponseHandler<HttpResponse<T>> 
 			resp = new HttpResponse<T>(Response.OK);
 			switch (contentType) {
 			case JSON:
-				final String respContent = EntityUtils.toString(arg.getEntity());
+				final String respContent = EntityUtils.toString(arg.getEntity(), "UTF-8");
+				
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("response content:" + respContent);
+				}
 
 				if (respContent.indexOf(WX_ERRMSG_FEATURE) > -1 && respContent.indexOf(WX_SUCMSG_FEATURE) == -1
 						&& respContent.indexOf("ok") == -1) {

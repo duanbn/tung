@@ -1,17 +1,17 @@
 package com.ysyx.commons.wx.util;
 
-import com.ysyx.commons.wx.WXCommonResult;
 import org.junit.Test;
+
+import com.ysyx.commons.wx.requests.menu.respbeans.GetMenuResult;
 
 public class JsonUtilTest {
 
 	@Test
 	public void test() {
-		String json = "{\"errcode\":0,\"errmsg\":\"send job submission success\",\"msg_id\":2350254591}";
+		String json = "{\"menu\":{\"button\":[{\"sub_button\":[]},{\"name\":\"服务信息\",\"sub_button\":[{\"sub_button\":[]},{\"sub_button\":[]},{\"type\":\"view\",\"name\":\"link\",\"url\":\"http:\\/\\/www.baidu.com\\/\",\"sub_button\":[]}]},{\"sub_button\":[]}]}}";
 
-		WXCommonResult wxRst = JsonUtil.parseObject(json, WXCommonResult.class);
+		GetMenuResult wxRst = JsonUtil.parseObject(json, GetMenuResult.class);
 
 		System.out.println(wxRst);
 	}
-
 }
