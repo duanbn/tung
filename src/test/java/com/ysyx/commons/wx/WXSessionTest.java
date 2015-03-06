@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import com.ysyx.commons.wx.exception.RequestException;
 import com.ysyx.commons.wx.requests.basesupport.respbeans.CallbackIp;
+import com.ysyx.commons.wx.requests.js.respbeans.JsapiTicket;
 import com.ysyx.commons.wx.requests.menu.Button;
 import com.ysyx.commons.wx.requests.menu.EnumButtonType;
 import com.ysyx.commons.wx.requests.menu.respbeans.GetMenuResult;
@@ -29,6 +30,12 @@ public class WXSessionTest {
 	@AfterClass
 	public static void shutdown() {
 		wxSession.close();
+	}
+
+	@Test
+	public void testGetJsapiTicket() throws RequestException {
+		final JsapiTicket jsapiTicket = wxSession.getJsapiTicket();
+		System.out.println(jsapiTicket);
 	}
 
 	@Test

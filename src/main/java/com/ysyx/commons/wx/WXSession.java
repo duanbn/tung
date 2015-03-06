@@ -19,6 +19,8 @@ import com.ysyx.commons.wx.requests.basesupport.MediaDownloadRequest;
 import com.ysyx.commons.wx.requests.basesupport.MediaUploadRequest;
 import com.ysyx.commons.wx.requests.basesupport.respbeans.AccessToken;
 import com.ysyx.commons.wx.requests.basesupport.respbeans.CallbackIp;
+import com.ysyx.commons.wx.requests.js.GetJsapiTicketRequest;
+import com.ysyx.commons.wx.requests.js.respbeans.JsapiTicket;
 import com.ysyx.commons.wx.requests.menu.Button;
 import com.ysyx.commons.wx.requests.menu.CreateMenuRequest;
 import com.ysyx.commons.wx.requests.menu.DeleteMenuRequest;
@@ -56,16 +58,30 @@ import com.ysyx.commons.wx.requests.wxmsg.UploadNewsRequest.ArticleItem;
  */
 public class WXSession {
 
+	private static final String APP_ID = "wxedabf9b277b61d91";
+	private static final String APP_SECRET = "d9134bee753052e8df681c4514768e02";
+
 	private MemcachedClient memClient;
 
 	private static final String TOKEN_KEY = "weixin.token";
 	private static final long TOKEN_EXPIRE = 7200 * 1000;
+
+	private final String appId;
+	private final String appSecret;
 
 	/**
 	 * 
 	 * @param address
 	 */
 	public WXSession(final String address) {
+		this(address, APP_ID, APP_SECRET);
+	}
+
+	/**
+	 * 
+	 * @param address
+	 */
+	public WXSession(final String address, final String appId, final String appSecret) {
 		try {
 			final List<InetSocketAddress> servers = new ArrayList<InetSocketAddress>();
 
@@ -79,6 +95,9 @@ public class WXSession {
 			}
 
 			this.memClient = new MemcachedClient(servers);
+
+			this.appId = appId;
+			this.appSecret = appSecret;
 		} catch (Exception e) {
 			throw new RuntimeException("连接memcached服务器失败", e);
 		}
@@ -89,6 +108,27 @@ public class WXSession {
 	 */
 	public void close() {
 		this.memClient.shutdown();
+	}
+
+	/******************************************************
+	 * js api support
+	 *****************************************************/
+	/**
+	 * get js api ticket
+	 * 
+	 * @return
+	 * @throws RequestException
+	 */
+	public JsapiTicket getJsapiTicket() throws RequestException {
+		final String accessToken = getToken().getValue();
+
+		final Response<JsapiTicket> resp = new GetJsapiTicketRequest(accessToken).execute();
+
+		if (resp.isOK()) {
+			return resp.get();
+		}
+
+		throw new RequestException(resp.getCode() + ":" + resp.getErrMessage());
 	}
 
 	/******************************************************
@@ -111,7 +151,7 @@ public class WXSession {
 			return resp.get();
 		}
 
-		throw new RequestException(resp.getErrMessage());
+		throw new RequestException(resp.getCode() + ":" + resp.getErrMessage());
 	}
 
 	/**
@@ -126,7 +166,7 @@ public class WXSession {
 			return resp.get();
 		}
 
-		throw new RequestException(resp.getErrMessage());
+		throw new RequestException(resp.getCode() + ":" + resp.getErrMessage());
 	}
 
 	/******************************************************
@@ -144,7 +184,7 @@ public class WXSession {
 			return resp.get();
 		}
 
-		throw new RequestException(resp.getErrMessage());
+		throw new RequestException(resp.getCode() + ":" + resp.getErrMessage());
 	}
 
 	/**
@@ -159,7 +199,7 @@ public class WXSession {
 			return resp.get();
 		}
 
-		throw new RequestException(resp.getErrMessage());
+		throw new RequestException(resp.getCode() + ":" + resp.getErrMessage());
 	}
 
 	/**
@@ -177,7 +217,7 @@ public class WXSession {
 			return resp.get();
 		}
 
-		throw new RequestException(resp.getErrMessage());
+		throw new RequestException(resp.getCode() + ":" + resp.getErrMessage());
 	}
 
 	/******************************************************
@@ -195,7 +235,7 @@ public class WXSession {
 			return resp.get();
 		}
 
-		throw new RequestException(resp.getErrMessage());
+		throw new RequestException(resp.getCode() + ":" + resp.getErrMessage());
 	}
 
 	/**
@@ -210,7 +250,7 @@ public class WXSession {
 			return resp.get();
 		}
 
-		throw new RequestException(resp.getErrMessage());
+		throw new RequestException(resp.getCode() + ":" + resp.getErrMessage());
 	}
 
 	/**
@@ -225,7 +265,7 @@ public class WXSession {
 			return resp.get();
 		}
 
-		throw new RequestException(resp.getErrMessage());
+		throw new RequestException(resp.getCode() + ":" + resp.getErrMessage());
 	}
 
 	/**
@@ -243,7 +283,7 @@ public class WXSession {
 			return resp.get();
 		}
 
-		throw new RequestException(resp.getErrMessage());
+		throw new RequestException(resp.getCode() + ":" + resp.getErrMessage());
 	}
 
 	/**
@@ -263,7 +303,7 @@ public class WXSession {
 			return resp.get();
 		}
 
-		throw new RequestException(resp.getErrMessage());
+		throw new RequestException(resp.getCode() + ":" + resp.getErrMessage());
 	}
 
 	/**
@@ -278,7 +318,7 @@ public class WXSession {
 			return resp.get();
 		}
 
-		throw new RequestException(resp.getErrMessage());
+		throw new RequestException(resp.getCode() + ":" + resp.getErrMessage());
 	}
 
 	/**
@@ -293,7 +333,7 @@ public class WXSession {
 			return resp.get();
 		}
 
-		throw new RequestException(resp.getErrMessage());
+		throw new RequestException(resp.getCode() + ":" + resp.getErrMessage());
 	}
 
 	/**
@@ -308,7 +348,7 @@ public class WXSession {
 			return resp.get();
 		}
 
-		throw new RequestException(resp.getErrMessage());
+		throw new RequestException(resp.getCode() + ":" + resp.getErrMessage());
 	}
 
 	/**
@@ -323,7 +363,7 @@ public class WXSession {
 			return resp.get();
 		}
 
-		throw new RequestException(resp.getErrMessage());
+		throw new RequestException(resp.getCode() + ":" + resp.getErrMessage());
 	}
 
 	/******************************************************
@@ -340,7 +380,7 @@ public class WXSession {
 			return resp.get();
 		}
 
-		throw new RequestException(resp.getErrMessage());
+		throw new RequestException(resp.getCode() + ":" + resp.getErrMessage());
 	}
 
 	/**
@@ -362,7 +402,7 @@ public class WXSession {
 			return resp.get();
 		}
 
-		throw new RequestException(resp.getErrMessage());
+		throw new RequestException(resp.getCode() + ":" + resp.getErrMessage());
 	}
 
 	/**
@@ -377,7 +417,7 @@ public class WXSession {
 			return resp.get();
 		}
 
-		throw new RequestException(resp.getErrMessage());
+		throw new RequestException(resp.getCode() + ":" + resp.getErrMessage());
 	}
 
 	/**
@@ -395,7 +435,7 @@ public class WXSession {
 			return resp.get();
 		}
 
-		throw new RequestException(resp.getErrMessage());
+		throw new RequestException(resp.getCode() + ":" + resp.getErrMessage());
 	}
 
 	/**
@@ -415,7 +455,7 @@ public class WXSession {
 			return resp.get();
 		}
 
-		throw new RequestException(resp.getErrMessage());
+		throw new RequestException(resp.getCode() + ":" + resp.getErrMessage());
 	}
 
 	/**
@@ -435,7 +475,7 @@ public class WXSession {
 			return resp.get();
 		}
 
-		throw new RequestException(resp.getErrMessage());
+		throw new RequestException(resp.getCode() + ":" + resp.getErrMessage());
 	}
 
 	/**
@@ -455,7 +495,7 @@ public class WXSession {
 			return resp.get();
 		}
 
-		throw new RequestException(resp.getErrMessage());
+		throw new RequestException(resp.getCode() + ":" + resp.getErrMessage());
 	}
 
 	/**
@@ -474,7 +514,7 @@ public class WXSession {
 			return resp.get();
 		}
 
-		throw new RequestException(resp.getErrMessage());
+		throw new RequestException(resp.getCode() + ":" + resp.getErrMessage());
 	}
 
 	/**
@@ -489,7 +529,7 @@ public class WXSession {
 			return resp.get();
 		}
 
-		throw new RequestException(resp.getErrMessage());
+		throw new RequestException(resp.getCode() + ":" + resp.getErrMessage());
 	}
 
 	/**
@@ -509,7 +549,7 @@ public class WXSession {
 			return resp.get();
 		}
 
-		throw new RequestException(resp.getErrMessage());
+		throw new RequestException(resp.getCode() + ":" + resp.getErrMessage());
 	}
 
 	/**
@@ -529,7 +569,7 @@ public class WXSession {
 			return resp.get();
 		}
 
-		throw new RequestException(resp.getErrMessage());
+		throw new RequestException(resp.getCode() + ":" + resp.getErrMessage());
 	}
 
 	/**
@@ -544,7 +584,7 @@ public class WXSession {
 			return resp.get();
 		}
 
-		throw new RequestException(resp.getErrMessage());
+		throw new RequestException(resp.getCode() + ":" + resp.getErrMessage());
 	}
 
 	/******************************************************
@@ -562,7 +602,7 @@ public class WXSession {
 			return resp.get();
 		}
 
-		throw new RequestException(resp.getErrMessage());
+		throw new RequestException(resp.getCode() + ":" + resp.getErrMessage());
 	}
 
 	/**
@@ -578,7 +618,7 @@ public class WXSession {
 			return resp.get();
 		}
 
-		throw new RequestException(resp.getErrMessage());
+		throw new RequestException(resp.getCode() + ":" + resp.getErrMessage());
 	}
 
 	/**
@@ -593,7 +633,7 @@ public class WXSession {
 			return resp.get();
 		}
 
-		throw new RequestException(resp.getErrMessage());
+		throw new RequestException(resp.getCode() + ":" + resp.getErrMessage());
 	}
 
 	/**
@@ -610,7 +650,7 @@ public class WXSession {
 				if (wxAccessToken == null || (nowTime - wxAccessToken.getCreateTime()) >= TOKEN_EXPIRE) {
 					int retry = 3;
 					while (retry-- > 0) {
-						final Response<AccessToken> resp = new GetAccessTokenRequest().execute();
+						final Response<AccessToken> resp = new GetAccessTokenRequest(appId, appSecret).execute();
 						if (resp.isOK()) {
 							final AccessToken accessToken = resp.get();
 							wxAccessToken = new WXAccessToken(accessToken.getAccessToken(), System.currentTimeMillis());
@@ -623,7 +663,7 @@ public class WXSession {
 				}
 			}
 		}
-		
+
 		return wxAccessToken;
 	}
 

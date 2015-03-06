@@ -10,6 +10,7 @@ import com.ysyx.commons.wx.requests.basesupport.respbeans.AccessToken;
 import com.ysyx.commons.wx.requests.wxmsg.EnumSendType;
 import com.ysyx.commons.wx.requests.wxmsg.SendRequest;
 import com.ysyx.commons.wx.requests.wxmsg.UploadNewsRequest;
+
 import org.junit.Test;
 
 import java.io.File;
@@ -18,9 +19,13 @@ import java.io.File;
  * Created by Daly.Osborn on 2015/2/13.
  */
 public class SendNewsTest {
+	
+	private static final String APP_ID = "wxedabf9b277b61d91";
+	private static final String APP_SECRET = "d9134bee753052e8df681c4514768e02";
+	
     @Test
     public void testSendNews() {
-        final GetAccessTokenRequest getAccessTokenRequest = new GetAccessTokenRequest();
+        final GetAccessTokenRequest getAccessTokenRequest = new GetAccessTokenRequest(APP_ID, APP_SECRET);
         final Response<AccessToken> resp = getAccessTokenRequest.execute();
         final AccessToken accessToken = resp.get();
 
