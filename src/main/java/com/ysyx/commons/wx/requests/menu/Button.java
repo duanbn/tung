@@ -38,6 +38,14 @@ public class Button {
 	/**
 	 * 
 	 * @param name
+	 */
+	public Button(final String name) {
+		this(name, null);
+	}
+
+	/**
+	 * 
+	 * @param name
 	 * @param type
 	 */
 	public Button(final String name, final EnumButtonType type) {

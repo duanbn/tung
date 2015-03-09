@@ -461,8 +461,7 @@ public class WXSession {
 	/**
      *
      */
-	public WXCommonResult sendText(final EnumSendType sendType, final List<String> openIdList, final String content)
-			throws RequestException {
+	public WXCommonResult sendText(final List<String> openIdList, final String content) throws RequestException {
 		final String accessToken = getToken().getValue();
 
 		final SendRequest req = new SendRequest(accessToken, EnumSendType.TEXT);

@@ -25,6 +25,8 @@ public class WXSessionTest {
 	@BeforeClass
 	public static void startup() {
 		wxSession = new WXSession("127.0.0.1:11211");
+		// wxSession = new WXSession("127.0.0.1:11211", "wx8c7fd9739d4600e2",
+		// "ec8d243dd68323ce0fe0e86fbf84745e");
 	}
 
 	@AfterClass
@@ -64,20 +66,36 @@ public class WXSessionTest {
 	public void testCreateMenu() throws RequestException {
 		List<Button> buttons = new ArrayList<Button>(3);
 
-		Button btn1 = new Button("百度", EnumButtonType.VIEW);
-		btn1.setKey("baidu");
-		btn1.setUrl("http://www.baidu.com");
-		buttons.add(btn1);
+		// Button btn1 = new Button("测试", EnumButtonType.VIEW);
+		// btn1.setKey("test");
+		// String url =
+		// "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx8c7fd9739d4600e2&redirect_uri=http%3A%2F%2Fwx.jiaoyoubaobao.com%2Fuser&response_type=code&scope=snsapi_base&state=#wechat_redirect";
+		// btn1.setUrl(url);
+		// buttons.add(btn1);
 
-		Button btn2 = new Button("阿里", EnumButtonType.VIEW);
-		btn2.setKey("alibaba");
-		btn2.setUrl("http://www.taobao.com");
-		buttons.add(btn2);
+		Button miaosha = new Button("秒杀", EnumButtonType.CLICK);
+		miaosha.setKey("miaosha");
+		miaosha.setUrl("http://www.baidu.com");
+		buttons.add(miaosha);
 
-		Button btn3 = new Button("腾讯", EnumButtonType.VIEW);
-		btn3.setKey("tengxun");
-		btn3.setUrl("http://www.qq.com");
-		buttons.add(btn3);
+		Button zhuti = new Button("主题", EnumButtonType.CLICK);
+		zhuti.setKey("zhuti");
+		zhuti.setUrl("http://www.qq.com");
+		buttons.add(zhuti);
+
+		Button more = new Button("更多");
+
+		Button jingxuan = new Button("精选去处", EnumButtonType.CLICK);
+		jingxuan.setKey("jingxuan");
+		jingxuan.setUrl("http://www.baidu.com");
+		more.appendButton(jingxuan);
+
+		Button me = new Button("我的信息", EnumButtonType.CLICK);
+		me.setKey("me");
+		me.setUrl("http://www.baidu.com");
+		more.appendButton(me);
+
+		buttons.add(more);
 
 		WXCommonResult result = wxSession.createMenu(buttons);
 
