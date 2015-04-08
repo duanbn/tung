@@ -3,7 +3,7 @@ package com.ysyx.commons.wx.requests.wxmsg;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import com.ysyx.commons.wx.TextHttpRequest;
-import com.ysyx.commons.wx.WXCommonResult;
+import com.ysyx.commons.wx.WXCommonResult2;
 import com.ysyx.commons.wx.annotations.Post;
 import com.ysyx.commons.wx.annotations.QueryString;
 
@@ -14,7 +14,7 @@ import com.ysyx.commons.wx.annotations.QueryString;
  *
  */
 @Post("/cgi-bin/message/template/send")
-public class SendTemplateMessageRequest<T> extends TextHttpRequest<WXCommonResult> {
+public class SendTemplateMessageRequest<T> extends TextHttpRequest<WXCommonResult2> {
     
     @QueryString("access_token")
 	private final String accessToken;

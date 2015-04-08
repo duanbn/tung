@@ -58,11 +58,18 @@ import com.ysyx.commons.wx.requests.wxmsg.UploadNewsRequest.ArticleItem;
  */
 public class WXSession {
 
+	// 慢鱼
 	private static final String APP_ID = "wxedabf9b277b61d91";
 	private static final String APP_SECRET = "d9134bee753052e8df681c4514768e02";
 
+	// 郊游宝宝
+	// private static final String APP_ID = "wx8c7fd9739d4600e2";
+	// private static final String APP_SECRET =
+	// "ec8d243dd68323ce0fe0e86fbf84745e";
+
 	private MemcachedClient memClient;
 
+	private static final String JSTOKEN_KEY = "weixin.js.token";
 	private static final String TOKEN_KEY = "weixin.token";
 	private static final long TOKEN_EXPIRE = 7200 * 1000;
 
@@ -122,13 +129,14 @@ public class WXSession {
 	public JsapiTicket getJsapiTicket() throws RequestException {
 		final String accessToken = getToken().getValue();
 
-		final Response<JsapiTicket> resp = new GetJsapiTicketRequest(accessToken).execute();
+		final WXToken jsToken = getJsToken(accessToken);
 
-		if (resp.isOK()) {
-			return resp.get();
-		}
+		final JsapiTicket ticket = new JsapiTicket();
+		ticket.setErrmsg("");
+		ticket.setTicket(jsToken.getValue());
+		ticket.setExpiresIn(7200);
 
-		throw new RequestException(resp.getCode() + ":" + resp.getErrMessage());
+		return ticket;
 	}
 
 	/******************************************************
@@ -387,7 +395,7 @@ public class WXSession {
 	 * @param topcolor
 	 *            can be ignored, default value if #FF0000
 	 */
-	public <T> WXCommonResult sendTemplateMessage(final String toUser, final String templateId, final String url,
+	public <T> WXCommonResult2 sendTemplateMessage(final String toUser, final String templateId, final String url,
 			final String topcolor, final T data) throws RequestException {
 		final String accessToken = getToken().getValue();
 
@@ -396,7 +404,7 @@ public class WXSession {
 		if (topcolor != null) {
 			req.setTopcolor(topcolor);
 		}
-		final Response<WXCommonResult> resp = req.execute();
+		final Response<WXCommonResult2> resp = req.execute();
 
 		if (resp.isOK()) {
 			return resp.get();
@@ -636,34 +644,71 @@ public class WXSession {
 	}
 
 	/**
-     *
-     */
-	private WXAccessToken getToken() {
+    *
+    */
+	private WXToken getJsToken(final String accessToken) {
 		final long nowTime = System.currentTimeMillis();
 
-		WXAccessToken wxAccessToken = (WXAccessToken) this.memClient.get(TOKEN_KEY);
+		WXToken wxToken = (WXToken) this.memClient.get(getJsMemcacheKey());
 
-		if (wxAccessToken == null || (nowTime - wxAccessToken.getCreateTime()) >= TOKEN_EXPIRE) {
-			synchronized (this) {
-				wxAccessToken = (WXAccessToken) this.memClient.get(TOKEN_KEY);
-				if (wxAccessToken == null || (nowTime - wxAccessToken.getCreateTime()) >= TOKEN_EXPIRE) {
-					int retry = 3;
-					while (retry-- > 0) {
-						final Response<AccessToken> resp = new GetAccessTokenRequest(appId, appSecret).execute();
-						if (resp.isOK()) {
-							final AccessToken accessToken = resp.get();
-							wxAccessToken = new WXAccessToken(accessToken.getAccessToken(), System.currentTimeMillis());
-							this.memClient.set(TOKEN_KEY, 0, wxAccessToken);
-							break;
-						} else {
-							sleep(1000);
-						}
-					}
+		if (wxToken == null || (nowTime - wxToken.getCreateTime()) >= TOKEN_EXPIRE) {
+			int retry = 3;
+			while (retry-- > 0) {
+				final Response<JsapiTicket> resp = new GetJsapiTicketRequest(accessToken).execute();
+				if (resp.isOK()) {
+					final JsapiTicket jsapiTikcet = resp.get();
+					wxToken = new WXToken(jsapiTikcet.getTicket(), System.currentTimeMillis());
+					this.memClient.set(getJsMemcacheKey(), 0, wxToken);
+					break;
+				} else {
+					sleep(1000);
 				}
 			}
 		}
 
-		return wxAccessToken;
+		return wxToken;
+	}
+
+	/**
+     *
+     */
+	private WXToken getToken() {
+		final long nowTime = System.currentTimeMillis();
+
+		WXToken wxToken = (WXToken) this.memClient.get(getMemcacheKey());
+
+		if (wxToken == null || (nowTime - wxToken.getCreateTime()) >= TOKEN_EXPIRE) {
+			int retry = 3;
+			while (retry-- > 0) {
+				final Response<AccessToken> resp = new GetAccessTokenRequest(appId, appSecret).execute();
+				if (resp.isOK()) {
+					final AccessToken accessToken = resp.get();
+					wxToken = new WXToken(accessToken.getAccessToken(), System.currentTimeMillis());
+					this.memClient.set(getMemcacheKey(), 0, wxToken);
+					break;
+				} else {
+					sleep(1000);
+				}
+			}
+		}
+
+		return wxToken;
+	}
+
+	private String getJsMemcacheKey() {
+		final StringBuilder key = new StringBuilder();
+		key.append(JSTOKEN_KEY).append('.').append(this.appId);
+		return key.toString();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	private String getMemcacheKey() {
+		final StringBuilder key = new StringBuilder();
+		key.append(TOKEN_KEY).append('.').append(this.appId);
+		return key.toString();
 	}
 
 	private void sleep(final long time) {
@@ -677,7 +722,7 @@ public class WXSession {
 	/**
      * 
      */
-	private static class WXAccessToken implements Serializable {
+	private static class WXToken implements Serializable {
 		private static final long serialVersionUID = 1L;
 
 		private final String value;
@@ -689,7 +734,7 @@ public class WXSession {
 		 * @param value
 		 * @param createTime
 		 */
-		public WXAccessToken(final String value, final long createTime) {
+		public WXToken(final String value, final long createTime) {
 			this.value = value;
 			this.createTime = createTime;
 		}
